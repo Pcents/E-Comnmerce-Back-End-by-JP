@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const { TableHints } = require("sequelize/types");
+// was this in orignial code?
+// const { TableHints } = require("sequelize/types");
 const { Tag, Product, ProductTag } = require("../../models");
 
 // The `/api/tags` endpoint
@@ -9,10 +10,11 @@ router.get("/", async (req, res) => {
   try {
     const tagData = await Tag.findAll({
       // be sure to include its associated Product data
-      include: [{ model: Product, through: ProductTag, as: "product_n_tag" }],
+      include: [{ model: Product, through: ProductTag, as: "Product_tag" }],
     });
     res.status(200).json(tagData);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -22,7 +24,7 @@ router.get("/:id", async (req, res) => {
   try {
     const tagData = await Tag.findByPk(req.params.id, {
       // be sure to include its associated Product data
-      include: [{ model: Product, through: ProductTag, as: "product_n_tag" }],
+      include: [{ model: Product, through: ProductTag, as: "Product_tag" }],
     });
     if (!tagData) {
       res.status(404).json({ message: "can't find an ID that doesn't exist" });
